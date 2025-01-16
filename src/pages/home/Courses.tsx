@@ -4,21 +4,22 @@ const Courses = () => {
     const courseMember = [
         {
             "value": "250+",
-            "description": "Countries for our customers"
+            "description": "High-quality courses taught by industry-leading mentors"
         },
         {
             "value": "1000+",
-            "description": "Brands for the best service"
+            "description": "Trusted brands offering exclusive learning content"
         },
         {
             "value": "15+",
-            "description": "Countries for installation"
+            "description": "Countries with students benefiting from our courses"
         },
         {
             "value": "2400+",
-            "description": "Stores for our retail services"
+            "description": "Partnered institutions offering our courses globally"
         }
     ]
+    
     return (
         <div className="bg-[#F8FAFC] py-8">
     <Marquee gradient={false} speed={50} className="w-full">
