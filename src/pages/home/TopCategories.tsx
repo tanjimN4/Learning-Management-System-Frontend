@@ -26,8 +26,8 @@ const TopCategories = () => {
       
     return (
         <div className="mb-10">
-        <h1 className="text-4xl mt-10 font-bold text-center">Top Categories</h1>
-        <div className="mt-10 mx-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex justify-between text-center items-center mx-7 my-10"><h1 className="text-4xl font-bold">Top Categories</h1><p className="text-center items-center text-[#3B82F6]">See All</p></div>
+        <div className="mt-10 mx-10 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {category.map((cat, index) => (
                 <div key={index} className="bg-base-100 shadow-xl rounded-lg overflow-hidden">
                     <div className="flex justify-center">

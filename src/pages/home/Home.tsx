@@ -1,4 +1,6 @@
 import Courses from "./Courses";
+import CoursesInstuctorBanner from "./CoursesInstuctorBanner";
+import CustomerSay from "./CustomerSay";
 import Hero from "./Hero";
 import TopCategories from "./TopCategories";
 import TopCourses from "./TopCourses";
@@ -14,6 +16,8 @@ const Home = () => {
             <TopCategories></TopCategories>
             <TopCourses></TopCourses>
             <TopInstructors></TopInstructors>
+            <CustomerSay></CustomerSay>
+            <CoursesInstuctorBanner></CoursesInstuctorBanner>
         </div>
     );
 };
