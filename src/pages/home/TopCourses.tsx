@@ -48,12 +48,20 @@ const TopCourses = () => {
         const fullStars = Math.floor(rating);
         const halfStar = rating % 1 !== 0;
         const emptyStars = 5 - Math.ceil(rating);
-
+    
         return (
             <>
-                {Array(fullStars).fill(<FaStar className="text-yellow-400" />)}
-                {halfStar && <FaStarHalfAlt className="text-yellow-400" />}
-                {Array(emptyStars).fill(<FaRegStar className="text-yellow-400" />)}
+                {Array(fullStars)
+                    .fill(null)
+                    .map((_, index) => (
+                        <FaStar key={`full-${index}`} className="text-yellow-400" />
+                    ))}
+                {halfStar && <FaStarHalfAlt key="half" className="text-yellow-400" />}
+                {Array(emptyStars)
+                    .fill(null)
+                    .map((_, index) => (
+                        <FaRegStar key={`empty-${index}`} className="text-yellow-400" />
+                    ))}
             </>
         );
     };
