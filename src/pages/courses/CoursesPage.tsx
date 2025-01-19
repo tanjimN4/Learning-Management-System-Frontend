@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { IoFilter } from 'react-icons/io5';
 import PopularMentors from './PopularMentors';
 import FeaturedCourses from './FeaturedCourses';
+import { Link } from 'react-router';
 
 const CoursesPage = () => {
   
@@ -76,14 +77,7 @@ const CoursesPage = () => {
                   {course.level} | {course.lectures} Lectures
                 </p>
                 <div className="card-actions mt-4">
-                  <a
-                    href={course.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-primary"
-                  >
-                    View Details
-                  </a>
+                  <Link className='btn btn-success text-white' to={'/details'}>View Details</Link>
                 </div>
               </div>
             </div>
