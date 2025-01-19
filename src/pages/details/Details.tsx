@@ -8,6 +8,7 @@ import Syllabus from "./Syllabus";
 import LearnerReviews from "./LearnerReviews";
 import { TbWorld } from "react-icons/tb";
 import { useState } from "react";
+import { Link } from "react-router";
 
 const Details = () => {
     const details = {
@@ -19,9 +20,9 @@ const Details = () => {
             bio: "Angela Yu is an experienced full-stack developer and educator, known for her engaging teaching style and ability to break down complex topics into easy-to-understand lessons.",
             profile_image: "https://res.cloudinary.com/dxdopsw8a/image/upload/v1737059202/images_crp4eb.jpg",
             reviews: '40445 Reviews',
-            students:'500 Students',
-            courses:'15 Courses',
-            profession:'Web Development',
+            students: '500 Students',
+            courses: '15 Courses',
+            profession: 'Web Development',
         },
         price: "99.9",
         rating: 4.8,
@@ -32,7 +33,7 @@ const Details = () => {
         description: "Learn to build and deploy modern web applications using HTML, CSS, and JavaScript. This bootcamp will take you from absolute beginner to a confident web developer ready to create dynamic websites.",
         course_description: "This Web Development Bootcamp is designed for aspiring developers who want to kickstart their career in web development. With a focus on practical skills, this course covers everything from the basics of HTML and CSS to more advanced JavaScript concepts. Through hands-on projects and exercises, you'll gain real-world experience that will help you build a strong portfolio and land your first web development job.",
         topics: ["HTML Basics", "CSS Fundamentals", "JavaScript Essentials", "Responsive Design"],
-        syllabus : [
+        syllabus: [
             {
                 title: "Introduction to HTML",
                 lessons: 4,
@@ -77,7 +78,7 @@ const Details = () => {
                     "Testing for Different Devices",
                 ],
             },
-        ],   
+        ],
         enrolled: 12000,
         url: "https://example.com/web-development-bootcamp",
         certificate: "At Byway, we understand the significance of formal recognition for your hard work and dedication to continuous learning. Upon successful completion of our courses, you will earn a prestigious certificate that not only validates your expertise but also opens doors to new opportunities in your chosen field.",
@@ -85,7 +86,7 @@ const Details = () => {
         language: "English",
         prerequisites: ["Basic computer knowledge"],
         original_price: "199.9",
-        discounted_price: "99.9",
+        discounted_price: "100",
         category: "Web Development",
         reviews: [
             {
@@ -111,10 +112,13 @@ const Details = () => {
             },
         ]
     };
-    const [active,setActive]=useState(0)
-    const handelClick=(index :number)=>{
+    const [active, setActive] = useState(0)
+    const handelClick = (index: number) => {
         setActive(index)
     }
+    const original = parseFloat(details.original_price);
+    const discounted = parseFloat(details.discounted_price);
+    const discountPercentage = Math.round(((original - discounted) / original) * 100);
     return (
         <div className="container mx-auto ">
             <div>
@@ -128,7 +132,7 @@ const Details = () => {
                             <img
                                 src={details.instructor.profile_image}
                                 alt={details.instructor.name}
-                                className="w-16 h-16 rounded-full object-cover"
+                                className="w-24 h-24 rounded-full object-cover"
                             />
                             <div>
                                 <h3 className="text-slate-600">Created by <span className="text-[#2563EB]">{details.instructor.name}</span></h3>
@@ -143,15 +147,24 @@ const Details = () => {
                         <div className="card bg-base-100 w-96 shadow-xl">
                             <figure className="px-10 pt-10">
                                 <img
-                                    src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+                                    src={details.course_image}
                                     alt="Shoes"
-                                    className="rounded-xl" />
+                                    className="rounded-xl border-2 w-80" />
                             </figure>
                             <div className="card-body items-center text-center">
-                                <h2 className="card-title">Shoes!</h2>
-                                <p>If a dog chews shoes whose shoes does he choose?</p>
-                                <div className="card-actions">
-                                    <button className="btn btn-primary">Buy Now</button>
+                                <div className="flex items-center gap-2">
+                                    {/* Current Price */}
+                                    <span className="text-2xl font-bold text-gray-900">$49.5</span>
+
+                                    {/* Original Price */}
+                                    <span className="text-xl text-gray-400 line-through">{details.original_price}</span>
+
+                                    {/* Discount Percentage */}
+                                    <span className="text-xl font-medium text-green-600">{discountPercentage}% off</span>
+                                </div>
+                                <div className="grid grid-cols-1 w-full gap-2">
+                                    <Link className="bg-[#8B5CF6] text-white px-6 py-2 rounded-md hover:bg-[#60A5FA] transition-colors duration-300 btn"  to="/chart">Add To Chart</Link>
+                                    <Link className="border-2 border-black btn" to={'checkout'}>Buy Now</Link>
                                 </div>
                             </div>
                         </div>
@@ -160,17 +173,17 @@ const Details = () => {
                 <div>
                     <Tabs>
                         <TabList className="flex justify-center gap-5 my-5">
-                            <Tab className='border-none'><button  onClick={()=>handelClick(0)}   className={`btn border-2 bg-none ${active === 0 ? 'bg-[#EFF6FF]' : ''}`}>Description</button></Tab>
-                            <Tab  className='border-none'><button onClick={()=>handelClick(1)}   className={`btn border-2 bg-none ${active === 1 ? 'bg-[#EFF6FF]' : ''}`}>Instructor</button></Tab>
-                            <Tab  className='border-none'><button onClick={()=>handelClick(2)}   className={`btn border-2 bg-none ${active === 2 ? 'bg-[#EFF6FF]' : ''}`}>Syllabus</button></Tab>
-                            <Tab  className='border-none'><button onClick={()=>handelClick(3)}   className={`btn border-2 bg-none ${active === 3 ? 'bg-[#EFF6FF]' : ''}`}>Reviews</button></Tab>
+                            <Tab className='border-none'><button onClick={() => handelClick(0)} className={`btn border-2 bg-none ${active === 0 ? 'bg-[#EFF6FF]' : ''}`}>Description</button></Tab>
+                            <Tab className='border-none'><button onClick={() => handelClick(1)} className={`btn border-2 bg-none ${active === 1 ? 'bg-[#EFF6FF]' : ''}`}>Instructor</button></Tab>
+                            <Tab className='border-none'><button onClick={() => handelClick(2)} className={`btn border-2 bg-none ${active === 2 ? 'bg-[#EFF6FF]' : ''}`}>Syllabus</button></Tab>
+                            <Tab className='border-none'><button onClick={() => handelClick(3)} className={`btn border-2 bg-none ${active === 3 ? 'bg-[#EFF6FF]' : ''}`}>Reviews</button></Tab>
                         </TabList>
                         <hr />
                         <TabPanel>
                             <Description course_description={details.course_description} certificate={details.certificate}></Description>
                         </TabPanel>
                         <TabPanel>
-                            <Instructor  instructor={details.instructor}></Instructor>
+                            <Instructor instructor={details.instructor}></Instructor>
                         </TabPanel>
                         <TabPanel>
                             <Syllabus syllabus={details.syllabus}></Syllabus>
