@@ -80,7 +80,6 @@ const Details = () => {
             },
         ],
         enrolled: 12000,
-        url: "https://example.com/web-development-bootcamp",
         certificate: "At Byway, we understand the significance of formal recognition for your hard work and dedication to continuous learning. Upon successful completion of our courses, you will earn a prestigious certificate that not only validates your expertise but also opens doors to new opportunities in your chosen field.",
         last_updated: "2025-01-01",
         language: "English",
@@ -95,6 +94,7 @@ const Details = () => {
                 review_text: "This course was amazing! It gave me a solid foundation in web development, and I now feel confident building my own websites.",
                 image: "https://res.cloudinary.com/dxdopsw8a/image/upload/v1737059202/images_crp4eb.jpg",
                 review_date: "2025-01-15",
+                email: "johndoe@example.com",
             },
             {
                 reviewer_name: "Jane Smith",
@@ -102,6 +102,7 @@ const Details = () => {
                 review_text: "Great course overall, but I think the JavaScript section could be a bit more detailed. Still, a very valuable learning experience.",
                 image: "https://res.cloudinary.com/dxdopsw8a/image/upload/v1737059202/images_crp4eb.jpg",
                 review_date: "2025-01-10",
+                email: "janesmith@example.com",
             },
             {
                 reviewer_name: "Mark Johnson",
@@ -109,8 +110,9 @@ const Details = () => {
                 review_text: "The instructor, Angela, did an excellent job explaining the concepts. The hands-on projects were especially helpful in reinforcing what I learned.",
                 image: "https://res.cloudinary.com/dxdopsw8a/image/upload/v1737059202/images_crp4eb.jpg",
                 review_date: "2025-01-05",
+                email: "markjohnson@example.com",
             },
-        ]
+        ]        
     };
     const [active, setActive] = useState(0)
     const handelClick = (index: number) => {

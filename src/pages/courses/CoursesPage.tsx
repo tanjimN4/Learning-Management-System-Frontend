@@ -1,51 +1,151 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoFilter } from 'react-icons/io5';
 import PopularMentors from './PopularMentors';
 import FeaturedCourses from './FeaturedCourses';
 import { Link } from 'react-router';
+import useAxiosPublic from '../../hook/useAxiosPublic';
+type Section = {
+  [key: string]: string[]; // Sections like Category, Level, etc., each containing an array of options
+};
 
 const CoursesPage = () => {
-  
+  const axiosPublic = useAxiosPublic()
+  const [courses, setCourses] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPage] = useState(1)
+  console.log(courses);
+
+
   const [showDiv, setShowDiv] = useState(false)
 
   const toggleBox = () => {
     setShowDiv(!showDiv)
   }
-  const sections = ["Category", "Level", "Lectures", "Language", "Rating", "Price"];
+  const sections: Section[] = [
+    {
+      Category: [
+        "Web Development",
+        "Data Science",
+        "Artificial Intelligence",
+        "Mobile App Development",
+        "Game Development",
+        "Graphic Design",
+        "UI/UX Design",
+        "Animation",
+        "Interior Design",
+        "Fashion Design",
+        "Photography",
+        "Video Editing",
+        "3D Modeling",
+        "Digital Marketing",
+        "Entrepreneurship",
+        "Financial Management",
+      ]
+    },
+    {
+      Level: [
+        "Beginner",
+        "Intermediate",
+        "Advanced",
+        "Expert"
+      ]
+    },
+    {
+      Lectures: [
+        "10-20",
+        "20-50",
+        "50-100",
+        "100+"
+      ]
+    },
+    {
+      Language: [
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Chinese",
+        "Japanese",
+        "Arabic",
+        "Russian",
+        "Hindi"
+      ]
+    },
+    {
+      Rating: [
+        "1 Star",
+        "2 Stars",
+        "3 Stars",
+        "4 Stars",
+        "5 Stars"
+      ]
+    },
+    {
+      Price: [
+        "Free",
+        "$0 - $50",
+        "$50 - $100",
+        "$100 - $200",
+        "$200+"
+      ]
+    }
+  ];
+  useEffect(() => {
+    axiosPublic.get(`/api/courses?page=${currentPage}&limit=6`)
+      .then(res => {
+        setCourses(res.data.courses);
+        setTotalPage(res.data.totalPages)
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, [axiosPublic, currentPage])
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
 
   return (
     <div>
       <div className="container flex mx-auto p-6">
-        <div className='w-60'>
+        <div className='w-72'>
           <h1 className="text-3xl font-bold pl-3">All Courses</h1>
           <div>
             <button onClick={toggleBox} className='btn border-2 ml-3 border-black'><IoFilter></IoFilter>Filter</button>
             {
               showDiv &&
               <div>
-                {sections.map((title, index) => (
-                  <div className="w-full mt-2" key={index}>
-                    <div className="collapse collapse-arrow">
-                      <input type="checkbox" className="peer" />
-                      <div className="collapse-title text-xl font-medium flex justify-between items-center border-b pb-2">
-                        {title}
-                      </div>
-                      <div className="collapse-content">
-                        <label>
-                          <input type="checkbox" className="checkbox mt-1" />
-                        </label>
+                {sections.map((section, index) => {
+                  // Extract the title (key) and options (value) from each section object
+                  const [title, options] = Object.entries(section)[0];
+
+                  return (
+                    <div className="w-full mt-2" key={index}>
+                      <div className="collapse collapse-arrow">
+                        <input type="checkbox" className="peer" />
+                        <div className="collapse-title text-xl font-medium flex justify-between items-center border-b pb-2">
+                          {title}
+                        </div>
+                        <div className="collapse-content">
+                          {options.map((option, idx) => (
+                            <label key={idx} className="block">
+                              <input type="checkbox" className="checkbox mt-1" />
+                              <span className="ml-2">{option}</span>
+                            </label>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             }
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 h-[1000px]">
           {courses.map((course, index) => (
-            <div key={index} className="card bg-base-100 shadow-xl">
+            <div key={index} className="card bg-base-100 shadow-xl h-[500px]">
               <figure>
                 <img
                   src={course.course_image}
@@ -84,6 +184,19 @@ const CoursesPage = () => {
           ))}
         </div>
       </div>
+      {/* Pagination Controls */}
+      <div className="flex justify-center my-4">
+        {currentPage > 1 && (
+          <button onClick={() => handlePageChange(currentPage - 1)} className="btn bg-[#8B5CF6] hover:bg-[#60A5FA]  mr-2">
+            Previous
+          </button>
+        )}
+        {currentPage < totalPages && (
+          <button onClick={() => handlePageChange(currentPage + 1)} className="btn bg-[#8B5CF6] hover:bg-[#60A5FA] ">
+            Next
+          </button>
+        )}
+      </div>
       <div>
         <PopularMentors></PopularMentors>
         <FeaturedCourses></FeaturedCourses>
@@ -92,97 +205,7 @@ const CoursesPage = () => {
   );
 };
 
-const courses = [
-  {
-    course_name: "Web Development Bootcamp",
-    course_image: "https://res.cloudinary.com/dxdopsw8a/image/upload/v1737059202/images_crp4eb.jpg",
-    course_owner: "Angela Yu",
-    price: "99.9",
-    rating: 4.8,
-    ratings_by: 1500,
-    lectures: 30,
-    level: "Beginner",
-    duration: "15 hours",
-    description: "Learn to build and deploy modern web applications using HTML, CSS, and JavaScript.",
-    topics: ["HTML Basics", "CSS Fundamentals", "JavaScript Essentials", "Responsive Design"],
-    enrolled: 12000,
-    url: "https://example.com/web-development-bootcamp",
-    certificate: true,
-    last_updated: "2025-01-01",
-    language: "English",
-    prerequisites: ["Basic computer knowledge"],
-    original_price: "199.9",
-    discounted_price: "99.9",
-    category: "Web Development",
-  },
-  {
-    course_name: "Data Science with Python",
-    course_image: "https://res.cloudinary.com/dxdopsw8a/image/upload/v1737059231/download_2_pss0yr.jpg",
-    course_owner: "Jose Portilla",
-    price: "149.9",
-    rating: 4.7,
-    ratings_by: 1800,
-    lectures: 40,
-    level: "Intermediate",
-    duration: "20 hours",
-    description: "Master data analysis, visualization, and machine learning with Python.",
-    topics: ["Python Basics", "Data Visualization", "Pandas and NumPy", "Machine Learning"],
-    enrolled: 10000,
-    url: "https://example.com/data-science-with-python",
-    certificate: true,
-    last_updated: "2025-01-01",
-    language: "English",
-    prerequisites: ["Basic Python knowledge"],
-    original_price: "249.9",
-    discounted_price: "149.9",
-    category: "Data Science",
-  },
-  {
-    course_name: "Digital Marketing Mastery",
-    course_image: "https://res.cloudinary.com/dxdopsw8a/image/upload/v1737059266/download_cjfqzs.jpg",
-    course_owner: "Neil Patel",
-    price: "79.9",
-    rating: 4.6,
-    ratings_by: 1200,
-    lectures: 25,
-    level: "Beginner",
-    duration: "12 hours",
-    description: "Learn the essentials of digital marketing, including SEO, PPC, and content strategy.",
-    topics: ["SEO Basics", "Social Media Marketing", "Google Ads", "Content Marketing"],
-    enrolled: 8000,
-    url: "https://example.com/digital-marketing-mastery",
-    certificate: true,
-    last_updated: "2024-12-15",
-    language: "English",
-    prerequisites: ["Basic understanding of marketing principles"],
-    original_price: "129.9",
-    discounted_price: "79.9",
-    category: "Digital Marketing",
-  },
-  {
-    course_name: "Graphic Design Essentials",
-    course_image: "https://res.cloudinary.com/dxdopsw8a/image/upload/v1737059260/download_1_cll7d8.jpg",
-    course_owner: "Chris Do",
-    price: "149.9",
-    rating: 4.9,
-    ratings_by: 2000,
-    lectures: 35,
-    level: "Beginner",
-    duration: "18 hours",
-    description: "Understand the principles of design and master tools like Photoshop and Illustrator.",
-    topics: ["Design Principles", "Adobe Photoshop", "Adobe Illustrator", "Typography"],
-    enrolled: 15000,
-    url: "https://example.com/graphic-design-essentials",
-    certificate: true,
-    last_updated: "2025-01-10",
-    language: "English",
-    prerequisites: ["Basic computer skills"],
-    original_price: "249.9",
-    discounted_price: "149.9",
-    category: "Design",
-  },
-  
-];
+
 
 
 export default CoursesPage;

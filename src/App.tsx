@@ -9,6 +9,7 @@ import SignUp from './pages/loginandsignup/SignUp'
 import CoursesPage from './pages/courses/CoursesPage'
 import Details from './pages/details/Details'
 import Chart from './pages/chart/Chart'
+import Profile from './pages/profile/Profile'
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="courses" element={<CoursesPage></CoursesPage>} />
         <Route path="details" element={<Details></Details>} />
         <Route path="chart" element={<Chart></Chart>} />
+        <Route path="profile" element={<Profile></Profile>} />
       </Route>
     </Routes>
     </>
