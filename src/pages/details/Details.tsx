@@ -8,9 +8,12 @@ import Syllabus from "./Syllabus";
 import LearnerReviews from "./LearnerReviews";
 import { TbWorld } from "react-icons/tb";
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 
 const Details = () => {
+    const {id}=useParams()
+    console.log(id);
+    
     const details = {
         course_name: "Web Development Bootcamp",
         course_image: "https://res.cloudinary.com/dxdopsw8a/image/upload/v1737059202/images_crp4eb.jpg",
