@@ -5,92 +5,36 @@ import PopularMentors from './PopularMentors';
 import FeaturedCourses from './FeaturedCourses';
 import { Link } from 'react-router';
 import useAxiosPublic from '../../hook/useAxiosPublic';
-type Section = {
-  [key: string]: string[]; // Sections like Category, Level, etc., each containing an array of options
-};
+
 
 const CoursesPage = () => {
   const axiosPublic = useAxiosPublic()
   const [courses, setCourses] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPage] = useState(1)
-  console.log(courses);
+  // console.log(courses);
+  const [sections, setSections] = useState([])
 
+  
 
   const [showDiv, setShowDiv] = useState(false)
 
   const toggleBox = () => {
     setShowDiv(!showDiv)
   }
-  const sections: Section[] = [
-    {
-      Category: [
-        "Web Development",
-        "Data Science",
-        "Artificial Intelligence",
-        "Mobile App Development",
-        "Game Development",
-        "Graphic Design",
-        "UI/UX Design",
-        "Animation",
-        "Interior Design",
-        "Fashion Design",
-        "Photography",
-        "Video Editing",
-        "3D Modeling",
-        "Digital Marketing",
-        "Entrepreneurship",
-        "Financial Management",
-      ]
-    },
-    {
-      Level: [
-        "Beginner",
-        "Intermediate",
-        "Advanced",
-        "Expert"
-      ]
-    },
-    {
-      Lectures: [
-        "10-20",
-        "20-50",
-        "50-100",
-        "100+"
-      ]
-    },
-    {
-      Language: [
-        "English",
-        "Spanish",
-        "French",
-        "German",
-        "Chinese",
-        "Japanese",
-        "Arabic",
-        "Russian",
-        "Hindi"
-      ]
-    },
-    {
-      Rating: [
-        "1 Star",
-        "2 Stars",
-        "3 Stars",
-        "4 Stars",
-        "5 Stars"
-      ]
-    },
-    {
-      Price: [
-        "Free",
-        "$0 - $50",
-        "$50 - $100",
-        "$100 - $200",
-        "$200+"
-      ]
-    }
-  ];
+  console.log(sections);
+ 
+  useEffect(() => {
+    axiosPublic.get('api/filterdata')
+      .then(res => {
+        const filteredSections = res.data.data.map(({ _id, __v, ...section }) => section);
+        setSections(filteredSections);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, [axiosPublic])
+
   useEffect(() => {
     axiosPublic.get(`/api/courses?page=${currentPage}&limit=6`)
       .then(res => {
@@ -113,37 +57,38 @@ const CoursesPage = () => {
           <h1 className="text-3xl font-bold pl-3">All Courses</h1>
           <div>
             <button onClick={toggleBox} className='btn border-2 ml-3 border-black'><IoFilter></IoFilter>Filter</button>
-            {
-              showDiv &&
+            {showDiv && (
               <div>
-                {sections.map((section, index) => {
-                  // Extract the title (key) and options (value) from each section object
-                  const [title, options] = Object.entries(section)[0];
-
-                  return (
-                    <div className="w-full mt-2" key={index}>
-                      <div className="collapse collapse-arrow">
-                        <input type="checkbox" className="peer" />
-                        <div className="collapse-title text-xl font-medium flex justify-between items-center border-b pb-2">
-                          {title}
+                {Array.isArray(sections) &&
+                  sections.map((section, index) => {
+                    // Iterate over each key-value pair in the section
+                    return Object.entries(section).map(([title, options], idx) => {
+                      return (
+                        <div key={idx} className="w-full mt-2">
+                          <div className="collapse collapse-arrow">
+                            <input type="checkbox" className="peer" />
+                            <div className="collapse-title text-xl font-medium flex justify-between items-center border-b pb-2">
+                              {title}
+                            </div>
+                            <div className="collapse-content">
+                              {Array.isArray(options) &&
+                                options.map((option, idx) => (
+                                  <label key={idx} className="block">
+                                    <input type="checkbox" className="checkbox mt-1" />
+                                    <span className="ml-2">{option}</span>
+                                  </label>
+                                ))}
+                            </div>
+                          </div>
                         </div>
-                        <div className="collapse-content">
-                          {options.map((option, idx) => (
-                            <label key={idx} className="block">
-                              <input type="checkbox" className="checkbox mt-1" />
-                              <span className="ml-2">{option}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                      );
+                    });
+                  })}
               </div>
-            }
+            )}
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 h-[1000px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 h-[1100px]">
           {courses.map((course, index) => (
             <div key={index} className="card bg-base-100 shadow-xl h-[500px]">
               <figure>
