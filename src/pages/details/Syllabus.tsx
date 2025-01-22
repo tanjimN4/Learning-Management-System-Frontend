@@ -19,6 +19,7 @@ const Syllabus = ({ syllabus }: SyllabusProps) => {
     const toggleExpanded = (index: number) => {
         setExpanded(expanded === index ? null : index); // Toggle the expanded state for each syllabus item
     };
+console.log(syllabus);
 
     return (
         <div className="w-2/3 mx-14 mb-10">
