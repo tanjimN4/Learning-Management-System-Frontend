@@ -1,6 +1,10 @@
 import { Link } from 'react-router';
+import useAuth from '../hook/useAuth';
 
 const NavBar = () => {
+  const { user } = useAuth()
+  console.log(user);
+
   const links = (
     <>
       <li className='text-slate-700 hover:text-black transition-colors duration-300'>
@@ -54,11 +58,32 @@ const NavBar = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <Link to={'/login'}>
-            <button className="bg-[#8B5CF6] text-white px-6 py-2 rounded-md hover:bg-[#60A5FA] transition-colors duration-300">
-              Login
-            </button>
-          </Link>
+          {user ?
+            <div className="dropdown  dropdown-end">
+              <div tabIndex={0} role="button" className="">
+                <div className="avatar">
+                  <div className="w-12 rounded-full">
+                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                  </div>
+                </div>
+              </div>
+              <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                <li><Link to={'/chart'}>My Chart</Link></li>
+                <li><Link to={'/dashboard'}>Dashboard</Link></li>
+                <li><a>Item 2</a></li>
+              </ul>
+            </div>
+
+            :
+            <Link to={'/login'}>
+              <button className="bg-[#8B5CF6] text-white px-6 py-2 rounded-md hover:bg-[#60A5FA] transition-colors duration-300">
+                Login
+              </button>
+            </Link>
+
+          }
+
+
         </div>
       </div>
     </div>

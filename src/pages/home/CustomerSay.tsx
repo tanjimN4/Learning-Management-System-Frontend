@@ -134,7 +134,7 @@ const CustomerSay = () => {
                         {customers.map((item, index) => (
                             <div
                                 key={index}
-                                className=" px-4 sm:px-6 md:px-8 w-[150px] sm:w-[200px] shadow-xl rounded-lg md:w-[450px]"
+                                className=" sm:px-6 md:px-8 w-[150px] sm:w-[200px] shadow-xl rounded-lg md:w-96"
                             >
                                 <svg
                                     className="my-5"

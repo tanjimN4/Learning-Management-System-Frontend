@@ -9,19 +9,19 @@ import useAxiosPublic from '../../hook/useAxiosPublic';
 
 const CoursesPage = () => {
   const axiosPublic = useAxiosPublic()
-  const [courses, setCourses] = useState([])
   const [allCourses, setAllCourses] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPage] = useState(1)
   const [sections, setSections] = useState([])
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [selectedOptions, setSelectedOptions] = useState({});
   const [filter, setFilter] = useState([])
 
-  useEffect(() => {
-    setFilter(courses);
-  }, [courses]);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(filter.length / itemsPerPage);
+  const currentData = filter.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   console.log(filter);
   const [showDiv, setShowDiv] = useState(false)
 
@@ -40,30 +40,18 @@ const CoursesPage = () => {
   }, [axiosPublic])
 
   useEffect(() => {
-    axiosPublic.get(`/api/courses?page=${currentPage}&limit=6`)
-      .then(res => {
-        setCourses(res.data.courses);
-        setTotalPage(res.data.totalPages)
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }, [axiosPublic, currentPage])
-  useEffect(() => {
     axiosPublic.get('/api/allcourses')
       .then(res => {
         setAllCourses(res.data)
+        setFilter(res.data);
       })
 
   }, [axiosPublic])
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
 
 
 
   const handleOpen = (option: string, title: string) => {
-    console.log(title,option);
+    console.log(title, option);
 
     setSelectedOptions({
       ...selectedOptions,
@@ -123,18 +111,29 @@ const CoursesPage = () => {
 
   };
 
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
 
   return (
     <div>
-      <div className="container flex mx-auto p-6">
+      <div className="container sm:flex-none lg:flex mx-auto p-6">
         <div className='w-72'>
           <h1 className="text-3xl font-bold pl-3">All Courses</h1>
-          <div>
-            <button onClick={toggleBox} className='btn border-2 ml-3 border-black'><IoFilter></IoFilter>Filter</button>
+          <div className='mb-4 lg:mb-0 dropdown'>
+            <button onClick={toggleBox} className='btn border-2 ml-3 border-slate-400'><IoFilter></IoFilter>Filter</button>
             {showDiv && (
-              <div>
+              <div className='menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow'>
                 {Array.isArray(sections) &&
-                  sections.map((section, index) => {
+                  sections.map((section) => {
                     // Iterate over each key-value pair in the section
                     return Object.entries(section).map(([title, options], idx) => {
                       return (
@@ -148,7 +147,7 @@ const CoursesPage = () => {
                               {Array.isArray(options) &&
                                 options.map((option, idx) => (
                                   <label key={idx} className="block">
-                                    <input onClick={() => { handleOpen(option, title)}} type="checkbox" readOnly checked={selectedOptions[title] === option} className="checkbox " />
+                                    <input onClick={() => { handleOpen(option, title) }} type="checkbox" readOnly checked={selectedOptions[title] === option} className="checkbox " />
                                     <span className="ml-2">{option}</span>
                                   </label>
                                 ))}
@@ -162,9 +161,9 @@ const CoursesPage = () => {
             )}
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 h-[1100px]">
-          {filter.map((course, index) => (
-            <div key={index} className="card bg-base-100 shadow-xl h-[500px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {currentData.map((course, index) => (
+            <div key={index} className="card bg-base-100 shadow-xl w-80 h-[500px]">
               <figure>
                 <img
                   src={course.course_image}
@@ -204,18 +203,18 @@ const CoursesPage = () => {
         </div>
       </div>
       {/* Pagination Controls */}
-      <div className="flex justify-center my-4">
-        {currentPage > 1 && (
-          <button onClick={() => handlePageChange(currentPage - 1)} className="btn bg-[#8B5CF6] hover:bg-[#60A5FA]  mr-2">
-            Previous
-          </button>
-        )}
-        {currentPage < totalPages && (
-          <button onClick={() => handlePageChange(currentPage + 1)} className="btn bg-[#8B5CF6] hover:bg-[#60A5FA] ">
-            Next
-          </button>
-        )}
+      <div className="flex justify-center items-center space-x-4 mt-4">
+        <button onClick={handlePrevious} disabled={currentPage === 1} className="btn btn-secondary">
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button onClick={handleNext} disabled={currentPage === totalPages} className="btn btn-secondary">
+          Next
+        </button>
       </div>
+
       <div>
         <PopularMentors></PopularMentors>
         <FeaturedCourses></FeaturedCourses>

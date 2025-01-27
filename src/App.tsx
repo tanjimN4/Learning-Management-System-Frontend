@@ -10,6 +10,10 @@ import CoursesPage from './pages/courses/CoursesPage'
 import Details from './pages/details/Details'
 import Chart from './pages/chart/Chart'
 import Profile from './pages/profile/Profile'
+import Dashboard from './dashboard/Dashboard'
+import DHome from './dashboard/DHome'
+import Dcourses from './dashboard/Dcourses'
+import Addcourse from './dashboard/Addcourse'
 
 
 function App() {
@@ -18,6 +22,7 @@ function App() {
   return (
     <>
       <Routes>
+
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="login" element={<Login />} />
@@ -27,6 +32,13 @@ function App() {
         <Route path="chart" element={<Chart></Chart>} />
         <Route path="profile" element={<Profile></Profile>} />
       </Route>
+      
+      <Route path='/dashboard' element={<Dashboard/>}>
+      <Route index element={<DHome></DHome>}/>
+      <Route path='/dashboard/courses' element={<Dcourses></Dcourses>}/>
+      <Route path='/dashboard/addcourse' element={<Addcourse></Addcourse>}/>
+      </Route>
+
     </Routes>
     </>
   )
